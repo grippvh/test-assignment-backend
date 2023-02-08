@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Entity
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     private String name;
     private long isbn;
@@ -49,7 +49,10 @@ public class Book {
         this.releaseDate = releaseDate;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(int i) {
     }
 }
