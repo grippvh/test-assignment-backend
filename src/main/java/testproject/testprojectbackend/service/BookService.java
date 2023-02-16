@@ -21,7 +21,6 @@ public class BookService {
         System.out.println(book.getIsbn());
         try {
             if (!checkIfBookExistsByISBN(book.getIsbn())){
-                book.setId(null == bookRepository.findMaxId()? 0 : bookRepository.findMaxId() + 1);
                 bookRepository.save(book);
                 return "Book " + book.getName() + " stored successfully!";
             }
