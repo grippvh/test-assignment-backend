@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("book")
 public class BookController {
 
 
@@ -24,7 +25,7 @@ public class BookController {
 
 
 
-    @GetMapping("/books/all")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllBooks() {
         if (bookService.getAllBooks().isEmpty() == false){
             return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
@@ -34,7 +35,7 @@ public class BookController {
         }
     }
 
-    @GetMapping("/books/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getBookById(@PathVariable Long id) {
         Optional<Book> resultBook = bookService.getBookByID(id);
         if (resultBook.isPresent())
@@ -44,17 +45,17 @@ public class BookController {
         }
     }
 
-    @PostMapping("/create_new_book")
+    @PostMapping("/create")
     public String createBook(@RequestBody Book book) {
         return bookService.createBook(book);
     }
 
-    @PutMapping("/update_book/{id}")
+    @PutMapping("/update/{id}")
     public String updateBook(@PathVariable Long id, @RequestBody Book book) {
         return bookService.updateBook(book);
     }
 
-    @DeleteMapping("/delete_book/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id) {
         return bookService.deleteBook(id);
     }
