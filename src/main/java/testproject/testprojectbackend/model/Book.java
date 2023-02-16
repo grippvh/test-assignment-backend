@@ -1,5 +1,8 @@
 package testproject.testprojectbackend.model;
 
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,9 +14,17 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @NotNull
     private String name;
+
+    @NotNull
     private long isbn;
+
+    @NotNull
     private String author;
+
+    @NotNull
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Release date must be in the format yyyy-MM-dd")
     private String releaseDate;
 
     public String getName() {

@@ -6,17 +6,22 @@ import testproject.testprojectbackend.model.Book;
 import testproject.testprojectbackend.repository.BookRepository;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class BookService {
 
+    private final static String errorMessage = "Error: constraints were broken, " +
+            "please check your input being not null and release date being in the format yyyy-MM-dd";
+    private final static String bookNotFoundMessage = "Book was not found!";
+
     @Autowired
     private BookRepository bookRepository;
 
 
-    public String createBook(Book book){
+    public String createBook(@Valid Book book){
         System.out.println(book.getIsbn());
         try {
             if (!checkIfBookExistsByISBN(book.getIsbn())){
@@ -27,7 +32,7 @@ public class BookService {
                 return "Book already exists!";
             }
         } catch (Exception e){ // better custom exceptions
-            throw e;
+            return errorMessage;
         }
     }
     private boolean checkIfBookExistsByISBN(long isbn){
@@ -50,14 +55,21 @@ public class BookService {
                 bookRepository.findById(book.getId()).get().setIsbn(book.getIsbn());
                 bookRepository.findById(book.getId()).get().setName(book.getName());
                 bookRepository.findById(book.getId()).get().setReleaseDate(book.getReleaseDate());
-                // TODO: save or not?
+                bookRepository.save(bookRepository.findById(book.getId()).get());
                 return "Book was updated!";
             } catch (Exception e){
-                throw e;
+                Book book1 = bookRepository.findById(book.getId()).get();
+                //System.out.println("id: " + book1.getId());
+                System.out.println("isbn: " + book1.getIsbn());
+                System.out.println("name: " + book1.getName());
+                System.out.println("author: " + book1.getAuthor());
+                System.out.println("date: " + book1.getReleaseDate());
+
+                return errorMessage;
             }
         }
         else {
-            return "Book was not found!";
+            return bookNotFoundMessage;
         }
     }
 
@@ -65,14 +77,14 @@ public class BookService {
     public String deleteBook(long id){
         if (bookRepository.findById(id).isPresent()){
             try {
-                bookRepository.delete(bookRepository.findById(id).get()); //TODO: can be handled better with optional
+                bookRepository.delete(bookRepository.findById(id).get()); // can be handled better with optional
                 return "Book was deleted successfully!";
             }
             catch (Exception e){
-                throw e;
+                return errorMessage;
             }
         } else {
-            return "Book to be deleted was not found!";
+            return bookNotFoundMessage;
         }
     }
 }
